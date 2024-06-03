@@ -1,6 +1,14 @@
+import * as dotenv from "dotenv";
+dotenv.config();
+
 import express from "express";
+import morgan from "morgan";
 
 const app = express();
+
+if (process.env.NODE_ENV === "development") {
+    app.use(morgan("dev"));
+}
 
 // JSON Middleware
 app.use(express.json());
@@ -14,6 +22,6 @@ app.post("/", (req, res) => {
     res.json({ message: "data received", data: req.body });
 });
 
-app.listen(5100, () => {
-    console.log("server is running");
+app.listen(process.env.PORT, () => {
+    console.log(`The server is running on port ${process.env.PORT}`);
 });
