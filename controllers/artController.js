@@ -13,14 +13,6 @@ let artwork = [
 ];
 
 export const createArt = async (req, res) => {
-    // const { category, title, description } = req.body;
-
-    // const art = await ArtModel.create({
-    //     category,
-    //     title,
-    //     description,
-    // });
-
     const art = await ArtModel.create(req.body);
 
     return res.status(201).json({ art });
