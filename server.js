@@ -2,9 +2,11 @@ import * as dotenv from "dotenv";
 dotenv.config();
 
 import express from "express";
+const app = express();
+
 import morgan from "morgan";
 
-const app = express();
+import mongoose from "mongoose";
 
 // routers
 import artRouter from "./routes/artRouter.js";
@@ -38,6 +40,14 @@ app.use((err, req, res, next) => {
     res.status(500).json({ msg: "something went wrong" });
 });
 
-app.listen(process.env.PORT || 5100, () => {
-    console.log(`The server is running`);
-});
+// MongoDB Connection
+try {
+    await mongoose.connect(process.env.MONGO_DB_URL);
+
+    app.listen(process.env.PORT || 5100, () => {
+        console.log(`The server is running`);
+    });
+} catch (error) {
+    console.error(error);
+    process.exit(1);
+}
