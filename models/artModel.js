@@ -16,7 +16,10 @@ const ArtSchema = new mongoose.Schema(
         },
         title: String,
         description: String,
-        likes: Number,
+        likes: {
+            type: Number,
+            default: 0,
+        },
     },
     { timestamps: true }
 );

@@ -1,17 +1,5 @@
 import ArtModel from "../models/ArtModel.js";
 
-let artwork = [
-    {
-        id: 1,
-        category: "oil",
-        title: "Sunset",
-        description: "Beautiful sunset!",
-        createdAt: "2023-06-01T12:00:00Z",
-        updatedAt: "",
-        likes: 0,
-    },
-];
-
 export const createArt = async (req, res) => {
     const art = await ArtModel.create(req.body);
 
@@ -36,48 +24,27 @@ export const getSingleArt = async (req, res) => {
 };
 
 export const updateArt = async (req, res) => {
-    const { category, title, description } = req.body;
-
-    if (!category || !title || !description) {
-        return res
-            .status(400)
-            .json({ msg: "please provide category, title, and description" });
-    }
-
     const { id } = req.params;
 
-    const art = artwork.find((art) => {
-        return art.id === parseInt(id);
+    const updatedArt = await ArtModel.findByIdAndUpdate(id, req.body, {
+        new: true,
     });
 
-    if (!art) {
+    if (!updatedArt) {
         return res.status(404).json({ msg: `no art with id ${id}` });
     }
 
-    art.category = category;
-    art.title = title;
-    art.description = description;
-    art.updatedAt = new Date();
-
-    return res.status(200).json({ msg: "art modified", art });
+    return res.status(200).json({ msg: "art modified", art: updatedArt });
 };
 
 export const deleteArt = async (req, res) => {
     const { id } = req.params;
 
-    const art = artwork.find((art) => {
-        return art.id === parseInt(id);
-    });
+    const removedArt = await ArtModel.findOneAndDelete(id);
 
-    if (!art) {
+    if (!removedArt) {
         return res.status(404).json({ msg: `no art with id ${id}` });
     }
 
-    const newArtwork = artwork.filter((art) => {
-        return art.id === parseInt(id);
-    });
-
-    artwork = newArtwork;
-
-    res.status(200).json({ msg: "art deleted" });
+    res.status(200).json({ msg: "art deleted", art: removedArt });
 };
