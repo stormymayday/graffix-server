@@ -6,6 +6,9 @@ import morgan from "morgan";
 
 const app = express();
 
+// routers
+import artRouter from "./routes/artRouter.js";
+
 if (process.env.NODE_ENV === "development") {
     app.use(morgan("dev"));
 }
@@ -21,6 +24,8 @@ app.post("/", (req, res) => {
     console.log(req);
     res.json({ message: "data received", data: req.body });
 });
+
+app.use("/api/v1/art", artRouter);
 
 // Not Found
 app.use("*", (req, res) => {
