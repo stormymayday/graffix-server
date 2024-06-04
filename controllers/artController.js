@@ -1,3 +1,5 @@
+import ArtModel from "../models/ArtModel.js";
+
 let artwork = [
     {
         id: 1,
@@ -10,25 +12,22 @@ let artwork = [
     },
 ];
 
-export const getAllArt = async (req, res) => {
-    res.status(200).json({ artwork });
-};
-
 export const createArt = async (req, res) => {
-    const { category, title, description } = req.body;
+    // const { category, title, description } = req.body;
 
-    if (!category || !title || !description) {
-        return res
-            .status(400)
-            .json({ msg: "please provide category, title, and description" });
-    }
+    // const art = await ArtModel.create({
+    //     category,
+    //     title,
+    //     description,
+    // });
 
-    const id = artwork.length + 1;
-    const art = { id, category, title, description, createdAt: new Date() };
-
-    artwork.push(art);
+    const art = await ArtModel.create(req.body);
 
     return res.status(201).json({ art });
+};
+
+export const getAllArt = async (req, res) => {
+    res.status(200).json({ artwork });
 };
 
 export const getSingleArt = async (req, res) => {
