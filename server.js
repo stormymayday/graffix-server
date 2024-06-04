@@ -26,7 +26,7 @@ app.use(express.json());
 
 // Routes
 app.use("/api/v1/art", artRouter);
-app.use("/api/v1/signup", authRouter);
+app.use("/api/v1/auth", authRouter);
 
 // Not Found
 app.use("*", (req, res) => {

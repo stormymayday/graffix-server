@@ -2,23 +2,9 @@ import { Router } from "express";
 
 const router = Router();
 
-import {
-    getAllArt,
-    getSingleArt,
-    createArt,
-    updateArt,
-    deleteArt,
-} from "../controllers/artController.js";
+import { login, register } from "../controllers/authController.js";
 
-// router.get("/", getAllArt);
-// router.post("/", createArt);
-
-// router.route("/").get(getAllArt).post(createArt);
-// router.route("/:id").get(getSingleArt).patch(updateArt).delete(deleteArt);
-
-router.post("/", (req, res) => {
-    console.log(req.body);
-    res.send("You made a post request");
-});
+router.post("/register", register);
+router.post("/login", login);
 
 export default router;
