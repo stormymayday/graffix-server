@@ -10,8 +10,9 @@ import morgan from "morgan";
 
 import mongoose from "mongoose";
 
-// routers
+// Router Imports
 import artRouter from "./routes/artRouter.js";
+import authRouter from "./routes/authRouter.js";
 
 if (process.env.NODE_ENV === "development") {
     app.use(morgan("dev"));
@@ -20,16 +21,9 @@ if (process.env.NODE_ENV === "development") {
 // JSON Middleware
 app.use(express.json());
 
-app.get("/", (req, res) => {
-    res.send("Hello World");
-});
-
-app.post("/", (req, res) => {
-    console.log(req);
-    res.json({ message: "data received", data: req.body });
-});
-
+// Routes
 app.use("/api/v1/art", artRouter);
+app.use("/api/v1/signup", authRouter);
 
 // Not Found
 app.use("*", (req, res) => {

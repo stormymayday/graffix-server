@@ -1,14 +1,15 @@
 import ArtModel from "../models/ArtModel.js";
+import { StatusCodes } from "http-status-codes";
 
 export const createArt = async (req, res) => {
     const art = await ArtModel.create(req.body);
 
-    return res.status(201).json({ art });
+    return res.status(StatusCodes.CREATED).json({ art });
 };
 
 export const getAllArt = async (req, res) => {
     const allArt = await ArtModel.find({});
-    res.status(200).json({ allArt });
+    res.status(StatusCodes.OK).json({ allArt });
 };
 
 export const getSingleArt = async (req, res) => {
@@ -34,7 +35,9 @@ export const updateArt = async (req, res) => {
         return res.status(404).json({ msg: `no art with id ${id}` });
     }
 
-    return res.status(200).json({ msg: "art modified", art: updatedArt });
+    return res
+        .status(StatusCodes.OK)
+        .json({ msg: "art modified", art: updatedArt });
 };
 
 export const deleteArt = async (req, res) => {
@@ -46,5 +49,5 @@ export const deleteArt = async (req, res) => {
         return res.status(404).json({ msg: `no art with id ${id}` });
     }
 
-    res.status(200).json({ msg: "art deleted", art: removedArt });
+    res.status(StatusCodes.OK).json({ msg: "art deleted", art: removedArt });
 };
