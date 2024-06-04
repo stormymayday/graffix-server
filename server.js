@@ -14,6 +14,9 @@ import mongoose from "mongoose";
 import artRouter from "./routes/artRouter.js";
 import authRouter from "./routes/authRouter.js";
 
+// Middleware
+import errorHandlerMiddleware from "./middleware/errorHandlerMiddleware.js";
+
 if (process.env.NODE_ENV === "development") {
     app.use(morgan("dev"));
 }
@@ -31,10 +34,7 @@ app.use("*", (req, res) => {
 });
 
 // Error
-app.use((err, req, res, next) => {
-    console.log(err);
-    res.status(500).json({ msg: "something went wrong" });
-});
+app.use(errorHandlerMiddleware);
 
 // MongoDB Connection
 try {

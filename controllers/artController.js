@@ -1,5 +1,6 @@
 import ArtModel from "../models/ArtModel.js";
 import { StatusCodes } from "http-status-codes";
+import { NotFoundError } from "../errors/customErrors.js";
 
 export const createArt = async (req, res) => {
     const art = await ArtModel.create(req.body);
@@ -18,7 +19,7 @@ export const getSingleArt = async (req, res) => {
     const singleArt = await ArtModel.findById(id);
 
     if (!singleArt) {
-        return res.status(404).json({ msg: `no art with id ${id}` });
+        throw new NotFoundError(`no art with id ${id}`);
     }
 
     res.status(200).json({ singleArt });
@@ -32,7 +33,7 @@ export const updateArt = async (req, res) => {
     });
 
     if (!updatedArt) {
-        return res.status(404).json({ msg: `no art with id ${id}` });
+        throw new NotFoundError(`no art with id ${id}`);
     }
 
     return res
@@ -46,7 +47,7 @@ export const deleteArt = async (req, res) => {
     const removedArt = await ArtModel.findOneAndDelete(id);
 
     if (!removedArt) {
-        return res.status(404).json({ msg: `no art with id ${id}` });
+        throw new NotFoundError(`no art with id ${id}`);
     }
 
     res.status(StatusCodes.OK).json({ msg: "art deleted", art: removedArt });
