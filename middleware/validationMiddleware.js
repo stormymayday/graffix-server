@@ -3,6 +3,7 @@ import { BadRequestError, NotFoundError } from "../errors/customErrors.js";
 import { ART_CATEGORIES } from "../utils/constants.js";
 import mongoose from "mongoose";
 import ArtModel from "../models/ArtModel.js";
+import UserModel from "../models/UserModel.js";
 
 const withValidationErrors = (validateValues) => {
     return [
@@ -54,4 +55,32 @@ export const validateIdParam = withValidationErrors([
             throw new NotFoundError(`no art with id ${value}`);
         }
     }),
+]);
+
+export const validateRegisterInput = withValidationErrors([
+    body("username")
+        .notEmpty()
+        .withMessage("username is required")
+        .custom(async (username) => {
+            const user = await UserModel.findOne({ username });
+            if (user) {
+                throw new BadRequestError("username already exists");
+            }
+        }),
+    body("email")
+        .notEmpty()
+        .withMessage("email is required")
+        .isEmail()
+        .withMessage("invalid email format")
+        .custom(async (email) => {
+            const user = await UserModel.findOne({ email });
+            if (user) {
+                throw new BadRequestError("email already exists");
+            }
+        }),
+    body("password")
+        .notEmpty()
+        .withMessage("password is required")
+        .isLength({ min: 8 })
+        .withMessage("password must be at least 8 characters long"),
 ]);

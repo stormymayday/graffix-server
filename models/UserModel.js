@@ -7,6 +7,7 @@ const UserSchema = new mongoose.Schema(
         password: String,
         name: String,
         bio: String,
+        location: String,
         profilePictureUrl: String,
         role: {
             type: String,
