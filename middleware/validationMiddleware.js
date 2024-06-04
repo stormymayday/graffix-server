@@ -1,5 +1,7 @@
-import { body, validationResult } from "express-validator";
+import { body, param, validationResult } from "express-validator";
 import { BadRequestError } from "../errors/customErrors.js";
+import { ART_CATEGORIES } from "../utils/constants.js";
+import mongoose from "mongoose";
 
 const withValidationErrors = (validateValues) => {
     return [
@@ -21,12 +23,22 @@ const withValidationErrors = (validateValues) => {
     ];
 };
 
-// For every controller:
-export const validateTest = withValidationErrors([
-    body("name")
+export const validateArtInput = withValidationErrors([
+    body("category").notEmpty().withMessage("category is required").trim(),
+    body("category")
+        .isIn(Object.values(ART_CATEGORIES))
+        .withMessage("invalid art category"),
+    body("title").notEmpty().withMessage("title is required").trim(),
+    body("description")
         .notEmpty()
-        .withMessage("name is required")
-        .isLength({ min: 3, max: 50 })
-        .withMessage("name must be between 3 and 50 characters")
+        .withMessage("description is required")
         .trim(),
+]);
+
+export const validateIdParam = withValidationErrors([
+    param("id")
+        .custom((value) => {
+            return mongoose.Types.ObjectId.isValid(value);
+        })
+        .withMessage("invalid id"),
 ]);

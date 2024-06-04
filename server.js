@@ -10,8 +10,6 @@ import morgan from "morgan";
 
 import mongoose from "mongoose";
 
-import { validateTest } from "./middleware/validationMiddleware.js";
-
 // Router Imports
 import artRouter from "./routes/artRouter.js";
 import authRouter from "./routes/authRouter.js";
@@ -25,11 +23,6 @@ if (process.env.NODE_ENV === "development") {
 
 // JSON Middleware
 app.use(express.json());
-
-app.post("/api/v1/test", validateTest, (req, res) => {
-    const { name } = req.body;
-    res.json({ message: `Hello ${name}` });
-});
 
 // Routes
 app.use("/api/v1/art", artRouter);

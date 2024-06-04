@@ -2,6 +2,7 @@ import { Router } from "express";
 
 const router = Router();
 
+// Controller
 import {
     getAllArt,
     getSingleArt,
@@ -10,10 +11,17 @@ import {
     deleteArt,
 } from "../controllers/artController.js";
 
-// router.get("/", getAllArt);
-// router.post("/", createArt);
+// Middleware
+import {
+    validateArtInput,
+    validateIdParam,
+} from "../middleware/validationMiddleware.js";
 
-router.route("/").get(getAllArt).post(createArt);
-router.route("/:id").get(getSingleArt).patch(updateArt).delete(deleteArt);
+router.route("/").get(getAllArt).post(validateArtInput, createArt);
+router
+    .route("/:id")
+    .get(validateIdParam, getSingleArt)
+    .patch(validateArtInput, validateIdParam, updateArt)
+    .delete(validateIdParam, deleteArt);
 
 export default router;
