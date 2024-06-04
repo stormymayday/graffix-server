@@ -22,6 +22,17 @@ app.post("/", (req, res) => {
     res.json({ message: "data received", data: req.body });
 });
 
-app.listen(process.env.PORT, () => {
-    console.log(`The server is running on port ${process.env.PORT}`);
+// Not Found
+app.use("*", (req, res) => {
+    res.status(404).json({ msg: "not found" });
+});
+
+// Error
+app.use((err, req, res, next) => {
+    console.log(err);
+    res.status(500).json({ msg: "something went wrong" });
+});
+
+app.listen(process.env.PORT || 5100, () => {
+    console.log(`The server is running`);
 });
