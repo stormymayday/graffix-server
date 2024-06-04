@@ -1,18 +1,12 @@
 import mongoose from "mongoose";
 
+import { ART_CATEGORIES } from "../utils/constants.js";
+
 const ArtSchema = new mongoose.Schema(
     {
         category: {
             type: String,
-            enum: [
-                "abstract",
-                "oil",
-                "impressionism",
-                "surrealism",
-                "pop art",
-                "cubism",
-                "expressionism",
-            ],
+            enum: Object.values(ART_CATEGORIES),
         },
         title: String,
         description: String,
