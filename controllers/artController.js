@@ -19,21 +19,20 @@ export const createArt = async (req, res) => {
 };
 
 export const getAllArt = async (req, res) => {
-    res.status(200).json({ artwork });
+    const allArt = await ArtModel.find({});
+    res.status(200).json({ allArt });
 };
 
 export const getSingleArt = async (req, res) => {
     const { id } = req.params;
 
-    const art = artwork.find((art) => {
-        return art.id === parseInt(id);
-    });
+    const singleArt = await ArtModel.findById(id);
 
-    if (!art) {
+    if (!singleArt) {
         return res.status(404).json({ msg: `no art with id ${id}` });
     }
 
-    res.status(200).json({ art });
+    res.status(200).json({ singleArt });
 };
 
 export const updateArt = async (req, res) => {
