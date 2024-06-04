@@ -1,13 +1,10 @@
 import { StatusCodes } from "http-status-codes";
 import UserModel from "../models/UserModel.js";
-import bcryptjs from "bcryptjs";
+import { hashPassword } from "../utils/passwordUtils.js";
 
 export const register = async (req, res) => {
-    // Generating Salt
-    const salt = await bcryptjs.genSalt(10);
-
     // Hashing the password
-    const hashedPassword = await bcryptjs.hash(req.body.password, salt);
+    const hashedPassword = await hashPassword(req.body.password);
 
     // Overriding the value
     req.body.password = hashedPassword;
