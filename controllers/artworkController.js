@@ -2,13 +2,16 @@ import ArtModel from "../models/ArtworkModel.js";
 import { StatusCodes } from "http-status-codes";
 
 export const createArtwork = async (req, res) => {
+    // Attaching 'createdBy' attribute and setting user as the value
+    req.body.createdBy = req.user.userId;
+
     const art = await ArtModel.create(req.body);
 
     return res.status(StatusCodes.CREATED).json({ art });
 };
 
 export const getAllArtworks = async (req, res) => {
-    console.log(req.user);
+    // console.log(req.user);
     const allArt = await ArtModel.find({});
     res.status(StatusCodes.OK).json({ allArt });
 };
