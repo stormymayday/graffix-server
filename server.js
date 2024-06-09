@@ -7,8 +7,8 @@ import express from "express";
 const app = express();
 
 import morgan from "morgan";
-
 import mongoose from "mongoose";
+import cookieParser from "cookie-parser";
 
 // Router Imports
 import artworkRouter from "./routes/artworkRouter.js";
@@ -21,7 +21,8 @@ import { authenticateUser } from "./middleware/authMiddlware.js";
 if (process.env.NODE_ENV === "development") {
     app.use(morgan("dev"));
 }
-
+// Cookie Parser Middleware
+app.use(cookieParser());
 // JSON Middleware
 app.use(express.json());
 
