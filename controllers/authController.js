@@ -2,6 +2,7 @@ import { StatusCodes } from "http-status-codes";
 import User from "../models/UserModel.js";
 import { hashPassword, comparePassword } from "../utils/passwordUtils.js";
 import { UnauthenticatedError } from "../errors/customErrors.js";
+import { createJWT } from "../utils/tokenUtils.js";
 
 export const register = async (req, res) => {
     // Hashing the password
@@ -37,5 +38,11 @@ export const login = async (req, res) => {
         throw new UnauthenticatedError("invalid credentials");
     }
 
-    res.send("login");
+    // Creating JWT
+    const token = createJWT({
+        userId: user._id,
+    });
+
+    // res.send("login");
+    res.json({ token: token });
 };
