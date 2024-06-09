@@ -43,6 +43,15 @@ export const login = async (req, res) => {
         userId: user._id,
     });
 
-    // res.send("login");
-    res.json({ token: token });
+    // HTTP Only Cookie setup
+    const oneDay = 1000 * 60 * 60 * 24;
+    res.cookie("httpcookietoken", token, {
+        httpOnly: true,
+        expires: new Date(Date.now() + oneDay),
+        secure: process.env.NODE_ENV === "production",
+    });
+
+    res.status(StatusCodes.OK).json({ msg: "user logged in" });
+
+    // res.json({ token: token });
 };
