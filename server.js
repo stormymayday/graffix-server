@@ -16,6 +16,7 @@ import authRouter from "./routes/authRouter.js";
 
 // Middleware
 import errorHandlerMiddleware from "./middleware/errorHandlerMiddleware.js";
+import { authenticateUser } from "./middleware/authMiddlware.js";
 
 if (process.env.NODE_ENV === "development") {
     app.use(morgan("dev"));
@@ -25,7 +26,7 @@ if (process.env.NODE_ENV === "development") {
 app.use(express.json());
 
 // Routes
-app.use("/api/v1/art", artworkRouter);
+app.use("/api/v1/art", authenticateUser, artworkRouter);
 app.use("/api/v1/auth", authRouter);
 
 // Not Found
