@@ -8,6 +8,7 @@ export const createArtwork = async (req, res) => {
 };
 
 export const getAllArtworks = async (req, res) => {
+    console.log(req.user);
     const allArt = await ArtModel.find({});
     res.status(StatusCodes.OK).json({ allArt });
 };

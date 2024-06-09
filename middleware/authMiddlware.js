@@ -1,4 +1,5 @@
 import { UnauthenticatedError } from "../errors/customErrors.js";
+import { verifyJWT } from "../utils/tokenUtils.js";
 
 export const authenticateUser = async (req, res, next) => {
     // console.log(req.cookies);
@@ -12,6 +13,20 @@ export const authenticateUser = async (req, res, next) => {
         throw new UnauthenticatedError("authentication failed");
     }
 
-    // If HTTP Cookie exists, passing on
-    next();
+    // Verifying if the JWT is valid
+    try {
+        // Extracting userID from the JWT if it is valid
+        const { userId } = verifyJWT(httpcookietoken);
+
+        // Attaching userId to the request such that it can be used by the upcoming controllers
+        req.user = {
+            userId: userId,
+        };
+
+        // If HTTP Cookie exists, passing on
+        next();
+    } catch (error) {
+        // Throwing custom Unauthenticated Error
+        throw new UnauthenticatedError("authentication failed");
+    }
 };
