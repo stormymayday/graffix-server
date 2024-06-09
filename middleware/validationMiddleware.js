@@ -2,8 +2,8 @@ import { body, param, validationResult } from "express-validator";
 import { BadRequestError, NotFoundError } from "../errors/customErrors.js";
 import { ART_CATEGORIES } from "../utils/constants.js";
 import mongoose from "mongoose";
-import ArtModel from "../models/ArtModel.js";
-import UserModel from "../models/UserModel.js";
+import Artwork from "../models/ArtworkModel.js";
+import User from "../models/UserModel.js";
 
 const withValidationErrors = (validateValues) => {
     return [
@@ -49,7 +49,7 @@ export const validateIdParam = withValidationErrors([
             throw new BadRequestError("invalid mongo id");
         }
 
-        const singleArt = await ArtModel.findById(value);
+        const singleArt = await Artwork.findById(value);
 
         if (!singleArt) {
             throw new NotFoundError(`no art with id ${value}`);
@@ -62,7 +62,7 @@ export const validateRegisterInput = withValidationErrors([
         .notEmpty()
         .withMessage("username is required")
         .custom(async (username) => {
-            const user = await UserModel.findOne({ username });
+            const user = await User.findOne({ username });
             if (user) {
                 throw new BadRequestError("username already exists");
             }
@@ -73,7 +73,7 @@ export const validateRegisterInput = withValidationErrors([
         .isEmail()
         .withMessage("invalid email format")
         .custom(async (email) => {
-            const user = await UserModel.findOne({ email });
+            const user = await User.findOne({ email });
             if (user) {
                 throw new BadRequestError("email already exists");
             }

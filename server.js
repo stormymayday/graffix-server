@@ -11,7 +11,7 @@ import morgan from "morgan";
 import mongoose from "mongoose";
 
 // Router Imports
-import artRouter from "./routes/artRouter.js";
+import artworkRouter from "./routes/artworkRouter.js";
 import authRouter from "./routes/authRouter.js";
 
 // Middleware
@@ -25,7 +25,7 @@ if (process.env.NODE_ENV === "development") {
 app.use(express.json());
 
 // Routes
-app.use("/api/v1/art", artRouter);
+app.use("/api/v1/art", artworkRouter);
 app.use("/api/v1/auth", authRouter);
 
 // Not Found
