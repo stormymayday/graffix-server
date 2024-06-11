@@ -16,10 +16,11 @@ export const authenticateUser = (req, res, next) => {
     // Verifying if the JWT is valid
     try {
         // Extracting userID from the JWT if it is valid
-        const { userId } = verifyJWT(httpcookietoken);
+        const { userId, username } = verifyJWT(httpcookietoken);
 
         // Attaching userId to the request such that it can be used by the upcoming controllers
         req.user = {
+            username: username,
             userId: userId,
         };
 

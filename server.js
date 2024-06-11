@@ -12,7 +12,7 @@ import cookieParser from "cookie-parser";
 
 // Router Imports
 import artworkRouter from "./routes/artworkRouter.js";
-import authRouter from "./routes/authenticationRouter.js";
+import authenticationRouter from "./routes/authenticationRouter.js";
 import userRouter from "./routes/userRouter.js";
 
 // Middleware
@@ -30,7 +30,7 @@ app.use(express.json());
 // Routes
 app.use("/api/v1/art", authenticateUser, artworkRouter);
 app.use("/api/v1/users", authenticateUser, userRouter);
-app.use("/api/v1/auth", authRouter);
+app.use("/api/v1/auth", authenticationRouter);
 
 // Not Found
 app.use("*", (req, res) => {

@@ -1,4 +1,5 @@
 import { StatusCodes } from "http-status-codes";
+import { hashPassword, comparePassword } from "../utils/passwordUtils.js";
 
 import User from "../models/UserModel.js";
 
@@ -14,5 +15,10 @@ export const getCurrentUser = async (req, res) => {
 };
 
 export const updateUser = async (req, res) => {
-    res.status(StatusCodes.OK).json({ msg: "update user" });
+    const userObj = { ...req.body };
+    // deleting the password
+    delete userObj.password;
+
+    const updatedUser = await User.findByIdAndUpdate(req.user.userId, userObj);
+    res.status(StatusCodes.OK).json({ msg: "user updated" });
 };

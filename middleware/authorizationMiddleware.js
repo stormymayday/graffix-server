@@ -4,7 +4,6 @@ import { UnauthorizedError, NotFoundError } from "../errors/customErrors.js";
 export const checkArtworkOwnership = async (req, res, next) => {
     // Getting the artwork ID from the request
     const { id } = req.params;
-    parameters;
 
     // Getting the user ID from the authenticated user
     const { userId } = req.user;

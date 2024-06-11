@@ -41,6 +41,7 @@ export const login = async (req, res) => {
     // Creating JWT
     const token = createJWT({
         userId: user._id,
+        username: user.username,
     });
 
     // HTTP Only Cookie setup
