@@ -13,15 +13,21 @@ import {
 
 // Middleware
 import {
-    validateArtInput,
+    validateArtworkInput,
     validateIdParam,
 } from "../middleware/validationMiddleware.js";
+import { checkArtworkOwnership } from "../middleware/authorizationMiddleware.js";
 
-router.route("/").get(getAllArtworks).post(validateArtInput, createArtwork);
+router.route("/").get(getAllArtworks).post(validateArtworkInput, createArtwork);
 router
     .route("/:id")
     .get(validateIdParam, getSingleArtwork)
-    .patch(validateArtInput, validateIdParam, updateArtwork)
-    .delete(validateIdParam, deleteArtwork);
+    .patch(
+        validateArtworkInput,
+        validateIdParam,
+        checkArtworkOwnership,
+        updateArtwork
+    )
+    .delete(validateIdParam, checkArtworkOwnership, deleteArtwork);
 
 export default router;

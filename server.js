@@ -16,7 +16,7 @@ import authRouter from "./routes/authRouter.js";
 
 // Middleware
 import errorHandlerMiddleware from "./middleware/errorHandlerMiddleware.js";
-import { authenticateUser } from "./middleware/authMiddlware.js";
+import { authenticateUser } from "./middleware/authenticationMiddlware.js";
 
 if (process.env.NODE_ENV === "development") {
     app.use(morgan("dev"));

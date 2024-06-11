@@ -28,7 +28,7 @@ const withValidationErrors = (validateValues) => {
     ];
 };
 
-export const validateArtInput = withValidationErrors([
+export const validateArtworkInput = withValidationErrors([
     body("category").notEmpty().withMessage("category is required").trim(),
     body("category")
         .isIn(Object.values(ART_CATEGORIES))
@@ -49,10 +49,10 @@ export const validateIdParam = withValidationErrors([
             throw new BadRequestError("invalid mongo id");
         }
 
-        const singleArt = await Artwork.findById(value);
+        const singleArtwork = await Artwork.findById(value);
 
-        if (!singleArt) {
-            throw new NotFoundError(`no art with id ${value}`);
+        if (!singleArtwork) {
+            throw new NotFoundError(`no artwork with id ${value}`);
         }
     }),
 ]);
