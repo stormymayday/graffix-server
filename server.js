@@ -9,6 +9,7 @@ const app = express();
 import morgan from "morgan";
 import mongoose from "mongoose";
 import cookieParser from "cookie-parser";
+import cloudinary from "cloudinary";
 
 // public
 import { dirname } from "path";
@@ -24,6 +25,13 @@ import userRouter from "./routes/userRouter.js";
 // Middleware
 import errorHandlerMiddleware from "./middleware/errorHandlerMiddleware.js";
 import { authenticateUser } from "./middleware/authenticationMiddleware.js";
+
+// Cloudinary Config
+cloudinary.config({
+    cloud_name: process.env.CLOUDINDARY_NAME,
+    api_key: process.env.CLOUDINDARY_API_KEY,
+    api_secret: process.env.CLOUDINDARY_API_SECRET,
+});
 
 if (process.env.NODE_ENV === "development") {
     app.use(morgan("dev"));
