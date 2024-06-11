@@ -1,5 +1,7 @@
 import { StatusCodes } from "http-status-codes";
 import { hashPassword, comparePassword } from "../utils/passwordUtils.js";
+import cloudinary from "cloudinary";
+import { promises as fs } from "fs";
 
 import User from "../models/UserModel.js";
 
@@ -15,10 +17,30 @@ export const getCurrentUser = async (req, res) => {
 };
 
 export const updateUser = async (req, res) => {
-    const userObj = { ...req.body };
+    const newUser = { ...req.body };
     // deleting the password
-    delete userObj.password;
+    delete newUser.password;
 
-    const updatedUser = await User.findByIdAndUpdate(req.user.userId, userObj);
+    // Checking if user sending an image
+    if (req.file) {
+        // Grabbing the file
+        const response = await cloudinary.v2.uploader.upload(req.file.path);
+
+        // Removing image from local filesystem (public/uploads)
+        await fs.unlink(req.file.path);
+
+        // Grabbing the url and public ID
+        newUser.avatar = response.secure_url;
+        newUser.avatarPublicID = response.public_id;
+    }
+
+    const updatedUser = await User.findByIdAndUpdate(req.user.userId, newUser);
+
+    // Checking if user sending an image && if there is an existing image on Cloudinary
+    if (req.file && updatedUser.avatarPublicID) {
+        // Deleting old image on Cloudinary
+        await cloudinary.v2.uploader.destroy(updatedUser.avatarPublicID);
+    }
+
     res.status(StatusCodes.OK).json({ msg: "user updated" });
 };
