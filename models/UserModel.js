@@ -14,6 +14,8 @@ const UserSchema = new mongoose.Schema(
             enum: ["artlover", "artist", "admin"],
             default: "artlover",
         },
+        avatar: String,
+        avatarPublicID: String,
         // followers: [ObjectId] (references to Users)
         // following: [ObjectId] (references to Users)
     },

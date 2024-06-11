@@ -10,6 +10,12 @@ import morgan from "morgan";
 import mongoose from "mongoose";
 import cookieParser from "cookie-parser";
 
+// public
+import { dirname } from "path";
+import { fileURLToPath } from "url";
+import path from "path";
+const __dirname = dirname(fileURLToPath(import.meta.url));
+
 // Router Imports
 import artworkRouter from "./routes/artworkRouter.js";
 import authenticationRouter from "./routes/authenticationRouter.js";
@@ -22,6 +28,9 @@ import { authenticateUser } from "./middleware/authenticationMiddleware.js";
 if (process.env.NODE_ENV === "development") {
     app.use(morgan("dev"));
 }
+
+// File Uploads
+app.use(express.static(path.resolve(__dirname, "./public")));
 // Cookie Parser Middleware
 app.use(cookieParser());
 // JSON Middleware
