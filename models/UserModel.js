@@ -20,4 +20,15 @@ const UserSchema = new mongoose.Schema(
     { timestamps: true }
 );
 
+// User w/o the password
+UserSchema.methods.removePassword = function () {
+    // Creating an object
+    let obj = this.toObject();
+
+    // Deleting password attribute
+    delete obj.password;
+
+    return obj;
+};
+
 export default mongoose.model("User", UserSchema);
