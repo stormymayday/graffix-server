@@ -10,7 +10,8 @@ const ArtworkSchema = new mongoose.Schema(
             type: String,
             enum: Object.values(ART_CATEGORIES),
         },
-        imageUrl: String,
+        artworkUrl: String,
+        artworkPublicID: String,
         createdBy: {
             type: mongoose.Types.ObjectId,
             ref: "User",

@@ -8,14 +8,13 @@ const UserSchema = new mongoose.Schema(
         name: String,
         bio: String,
         location: String,
-        profilePictureUrl: String,
+        avatar: String,
+        avatarPublicID: String,
         role: {
             type: String,
             enum: ["artlover", "artist", "admin"],
             default: "artlover",
         },
-        avatar: String,
-        avatarPublicID: String,
         // followers: [ObjectId] (references to Users)
         // following: [ObjectId] (references to Users)
     },
