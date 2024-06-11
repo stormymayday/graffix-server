@@ -2,7 +2,11 @@ import { Router } from "express";
 
 const router = Router();
 
-import { login, logout, register } from "../controllers/authController.js";
+import {
+    login,
+    logout,
+    register,
+} from "../controllers/authenticationController.js";
 
 import {
     validateRegisterInput,

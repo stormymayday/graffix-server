@@ -12,11 +12,12 @@ import cookieParser from "cookie-parser";
 
 // Router Imports
 import artworkRouter from "./routes/artworkRouter.js";
-import authRouter from "./routes/authRouter.js";
+import authRouter from "./routes/authenticationRouter.js";
+import userRouter from "./routes/userRouter.js";
 
 // Middleware
 import errorHandlerMiddleware from "./middleware/errorHandlerMiddleware.js";
-import { authenticateUser } from "./middleware/authenticationMiddlware.js";
+import { authenticateUser } from "./middleware/authenticationMiddleware.js";
 
 if (process.env.NODE_ENV === "development") {
     app.use(morgan("dev"));
@@ -28,6 +29,7 @@ app.use(express.json());
 
 // Routes
 app.use("/api/v1/art", authenticateUser, artworkRouter);
+app.use("/api/v1/users", authenticateUser, userRouter);
 app.use("/api/v1/auth", authRouter);
 
 // Not Found
