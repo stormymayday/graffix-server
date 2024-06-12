@@ -1,5 +1,7 @@
 import ArtModel from "../models/ArtworkModel.js";
 import { StatusCodes } from "http-status-codes";
+import cloudinary from "cloudinary";
+import { promises as fs } from "fs";
 
 export const createArtwork = async (req, res) => {
     // Attaching 'createdBy' attribute and setting user as the value
