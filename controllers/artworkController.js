@@ -4,12 +4,33 @@ import cloudinary from "cloudinary";
 import { promises as fs } from "fs";
 
 export const createArtwork = async (req, res) => {
-    // Attaching 'createdBy' attribute and setting user as the value
-    req.body.createdBy = req.user.userId;
+    // CREATE v1 - START
+    // req.body.createdBy = req.user.userId;
+    // const art = await ArtModel.create(req.body);
+    // return res.status(StatusCodes.CREATED).json({ art });
+    // CREATE v1 - END
 
-    const art = await ArtModel.create(req.body);
+    // CREATE v2 - START (testing file upload)
+    const { title, description, category } = req.body;
+    const createdBy = req.user.userId;
+    let artworkUrl, artworkPublicID;
+    if (req.file) {
+        const response = await cloudinary.v2.uploader.upload(req.file.path);
+        await fs.unlink(req.file.path);
 
+        artworkUrl = response.secure_url;
+        artworkPublicID = response.public_id;
+    }
+    const art = await ArtworkModel.create({
+        title,
+        description,
+        category,
+        artworkUrl,
+        artworkPublicID,
+        createdBy,
+    });
     return res.status(StatusCodes.CREATED).json({ art });
+    // CREATE v2 - END (testing file upload)
 };
 
 export const getAllArtworks = async (req, res) => {
@@ -27,15 +48,42 @@ export const getSingleArtwork = async (req, res) => {
 };
 
 export const updateArtwork = async (req, res) => {
-    const { id } = req.params;
+    // UPDATE V1 - START
+    // const { id } = req.params;
+    // const updatedArt = await ArtModel.findByIdAndUpdate(id, req.body, {
+    //     new: true,
+    // });
+    // return res
+    //     .status(StatusCodes.OK)
+    //     .json({ msg: "art modified", art: updatedArt });
+    // UPDATE V1 - END
 
-    const updatedArt = await ArtModel.findByIdAndUpdate(id, req.body, {
+    // UPDATE v2 - START (testing file upload)
+    const { id } = req.params;
+    const updates = req.body;
+
+    if (req.file) {
+        const artwork = await ArtworkModel.findById(id);
+
+        if (artwork.artworkPublicID) {
+            await cloudinary.v2.uploader.destroy(artwork.artworkPublicID);
+        }
+
+        const response = await cloudinary.v2.uploader.upload(req.file.path);
+        await fs.unlink(req.file.path);
+
+        updates.artworkUrl = response.secure_url;
+        updates.artworkPublicID = response.public_id;
+    }
+
+    const updatedArt = await ArtworkModel.findByIdAndUpdate(id, updates, {
         new: true,
     });
 
     return res
         .status(StatusCodes.OK)
         .json({ msg: "art modified", art: updatedArt });
+    // UPDATE v2 - END (testing file upload)
 };
 
 export const deleteArtwork = async (req, res) => {
