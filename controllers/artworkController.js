@@ -21,7 +21,7 @@ export const createArtwork = async (req, res) => {
         artworkUrl = response.secure_url;
         artworkPublicID = response.public_id;
     }
-    const art = await ArtworkModel.create({
+    const art = await ArtModel.create({
         title,
         description,
         category,
@@ -63,7 +63,7 @@ export const updateArtwork = async (req, res) => {
     const updates = req.body;
 
     if (req.file) {
-        const artwork = await ArtworkModel.findById(id);
+        const artwork = await ArtModel.findById(id);
 
         if (artwork.artworkPublicID) {
             await cloudinary.v2.uploader.destroy(artwork.artworkPublicID);
@@ -76,7 +76,7 @@ export const updateArtwork = async (req, res) => {
         updates.artworkPublicID = response.public_id;
     }
 
-    const updatedArt = await ArtworkModel.findByIdAndUpdate(id, updates, {
+    const updatedArt = await ArtModel.findByIdAndUpdate(id, updates, {
         new: true,
     });
 
