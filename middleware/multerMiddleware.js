@@ -16,30 +16,18 @@
 // export default fileUpload;
 
 import multer from "multer";
-import fs from "fs";
+import DataParser from "datauri/parser.js";
 import path from "path";
-import { fileURLToPath } from "url";
 
-// Convert import.meta.url to a file path
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
+const storage = multer.memoryStorage();
 
-// Ensure the upload directory exists
-const uploadDir = path.join(__dirname, "..", "public/uploads");
-if (!fs.existsSync(uploadDir)) {
-    fs.mkdirSync(uploadDir, { recursive: true });
-}
+const upload = multer({ storage });
 
-const storage = multer.diskStorage({
-    destination: (req, file, cb) => {
-        cb(null, uploadDir);
-    },
-    filename: (req, file, cb) => {
-        const fileName = file.originalname;
-        cb(null, fileName);
-    },
-});
+const parser = new DataParser();
 
-const fileUpload = multer({ storage });
+export const formatImage = (file) => {
+    const fileExtension = path.extname(file.originalname).toString();
+    return parser.format(fileExtension, file.buffer).content;
+};
 
-export default fileUpload;
+export default upload;
