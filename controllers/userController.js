@@ -1,7 +1,8 @@
 import { StatusCodes } from "http-status-codes";
 import { hashPassword, comparePassword } from "../utils/passwordUtils.js";
 import cloudinary from "cloudinary";
-import { promises as fs } from "fs";
+// import { promises as fs } from "fs";
+import { formatImage } from "../middleware/multerMiddleware.js";
 
 import User from "../models/UserModel.js";
 
@@ -17,21 +18,26 @@ export const getCurrentUser = async (req, res) => {
 };
 
 export const updateUser = async (req, res) => {
+    // grabbing the user
     const newUser = { ...req.body };
     // deleting the password
     delete newUser.password;
 
     // Checking if user sending an image
     if (req.file) {
-        // Grabbing the file
-        const response = await cloudinary.v2.uploader.upload(req.file.path);
+        const file = formatImage(req.file);
 
-        console.log(`Logging response ${response}`);
+        // Uploading to Cloudinary
+        // const response = await cloudinary.v2.uploader.upload(req.file.path);
+
+        // Passing (formatted) file directly to Cloudinary
+        const response = await cloudinary.v2.uploader.upload(file);
 
         // Removing image from local filesystem (public/uploads)
-        await fs.unlink(req.file.path);
+        // No longer needed (disk storage)
+        // await fs.unlink(req.file.path);
 
-        // Grabbing the url and public ID
+        // Grabbing the url and public ID from Cloudinary response
         newUser.avatar = response.secure_url;
         newUser.avatarPublicID = response.public_id;
     }

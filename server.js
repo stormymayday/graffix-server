@@ -37,7 +37,7 @@ if (process.env.NODE_ENV === "development") {
     app.use(morgan("dev"));
 }
 
-// File Uploads
+// File Uploads - deprecated
 app.use(express.static(path.resolve(__dirname, "./public")));
 // Cookie Parser Middleware
 app.use(cookieParser());
