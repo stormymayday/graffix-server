@@ -11,16 +11,15 @@ import mongoose from "mongoose";
 import cookieParser from "cookie-parser";
 import cloudinary from "cloudinary";
 
-// public
-import { dirname } from "path";
-import { fileURLToPath } from "url";
-import path from "path";
-const __dirname = dirname(fileURLToPath(import.meta.url));
-
 // Router Imports
 import artworkRouter from "./routes/artworkRouter.js";
 import authenticationRouter from "./routes/authenticationRouter.js";
 import userRouter from "./routes/userRouter.js";
+
+// public
+import { dirname } from "path";
+import { fileURLToPath } from "url";
+import path from "path";
 
 // Middleware
 import errorHandlerMiddleware from "./middleware/errorHandlerMiddleware.js";
@@ -32,6 +31,8 @@ cloudinary.config({
     api_key: process.env.CLOUDINDARY_API_KEY,
     api_secret: process.env.CLOUDINDARY_API_SECRET,
 });
+
+const __dirname = dirname(fileURLToPath(import.meta.url));
 
 if (process.env.NODE_ENV === "development") {
     app.use(morgan("dev"));

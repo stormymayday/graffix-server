@@ -28,7 +28,7 @@ const fileUpload = multer({ storage });
 const parser = new DataParser();
 
 export const formatImage = (file) => {
-    // console.log(file);
+    // console.log(`multerMiddleware log: ${file}`);
 
     // Grabbing the file extension (requires 'path' module)
     const fileExtension = path.extname(file.originalname).toString();

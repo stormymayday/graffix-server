@@ -27,6 +27,8 @@ export const updateUser = async (req, res) => {
     if (req.file) {
         const file = formatImage(req.file);
 
+        console.log(`userController log ${file}`);
+
         // Uploading to Cloudinary
         // const response = await cloudinary.v2.uploader.upload(req.file.path);
 
