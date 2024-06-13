@@ -26,6 +26,8 @@ export const updateUser = async (req, res) => {
         // Grabbing the file
         const response = await cloudinary.v2.uploader.upload(req.file.path);
 
+        console.log(`Logging response ${response}`);
+
         // Removing image from local filesystem (public/uploads)
         await fs.unlink(req.file.path);
 
