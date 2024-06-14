@@ -1,7 +1,8 @@
 import ArtModel from "../models/ArtworkModel.js";
 import { StatusCodes } from "http-status-codes";
 import cloudinary from "cloudinary";
-import { promises as fs } from "fs";
+// import { promises as fs } from "fs";
+import { formatImage } from "../middleware/multerMiddleware.js";
 
 export const createArtwork = async (req, res) => {
     // CREATE v1 - START
@@ -15,8 +16,9 @@ export const createArtwork = async (req, res) => {
     const createdBy = req.user.userId;
     let artworkUrl, artworkPublicID;
     if (req.file) {
-        const response = await cloudinary.v2.uploader.upload(req.file.path);
-        await fs.unlink(req.file.path);
+        const file = formatImage(req.file);
+        const response = await cloudinary.v2.uploader.upload(file);
+        // await fs.unlink(req.file.path);
 
         artworkUrl = response.secure_url;
         artworkPublicID = response.public_id;
