@@ -71,8 +71,11 @@ export const updateArtwork = async (req, res) => {
             await cloudinary.v2.uploader.destroy(artwork.artworkPublicID);
         }
 
-        const response = await cloudinary.v2.uploader.upload(req.file.path);
-        await fs.unlink(req.file.path);
+        const file = formatImage(req.file);
+
+        // const response = await cloudinary.v2.uploader.upload(req.file.path);
+        const response = await cloudinary.v2.uploader.upload(file);
+        // await fs.unlink(req.file.path);
 
         updates.artworkUrl = response.secure_url;
         updates.artworkPublicID = response.public_id;
