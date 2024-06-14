@@ -93,5 +93,10 @@ export const deleteArtwork = async (req, res) => {
 
     const removedArt = await ArtModel.findOneAndDelete(id);
 
+    // Deleting file from Cloudinary
+    if (removedArt.artworkPublicID) {
+        await cloudinary.v2.uploader.destroy(removedArt.artworkPublicID);
+    }
+
     res.status(StatusCodes.OK).json({ msg: "art deleted", art: removedArt });
 };
