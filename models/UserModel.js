@@ -7,7 +7,15 @@ const UserSchema = new mongoose.Schema(
         password: String,
         name: String,
         bio: String,
-        location: String,
+        location: {
+            type: {
+                type: String,
+                enum: ["Point"],
+            },
+            coordinates: {
+                type: [Number],
+            },
+        },
         avatar: String,
         avatarPublicID: String,
         role: {
@@ -15,8 +23,6 @@ const UserSchema = new mongoose.Schema(
             enum: ["artlover", "artist", "admin"],
             default: "artlover",
         },
-        // followers: [ObjectId] (references to Users)
-        // following: [ObjectId] (references to Users)
     },
     { timestamps: true }
 );
@@ -31,5 +37,8 @@ UserSchema.methods.removePassword = function () {
 
     return obj;
 };
+
+// Creating a geospatial index on the location field
+UserSchema.index({ location: "2dsphere" });
 
 export default mongoose.model("User", UserSchema);

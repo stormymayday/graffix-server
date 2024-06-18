@@ -1,7 +1,6 @@
 import { StatusCodes } from "http-status-codes";
 import { hashPassword, comparePassword } from "../utils/passwordUtils.js";
 import cloudinary from "cloudinary";
-// import { promises as fs } from "fs";
 import { formatImage } from "../middleware/multerMiddleware.js";
 
 import User from "../models/UserModel.js";
@@ -29,15 +28,8 @@ export const updateUser = async (req, res) => {
 
         console.log(`userController log ${file}`);
 
-        // Uploading to Cloudinary
-        // const response = await cloudinary.v2.uploader.upload(req.file.path);
-
         // Passing (formatted) file directly to Cloudinary
         const response = await cloudinary.v2.uploader.upload(file);
-
-        // Removing image from local filesystem (public/uploads)
-        // No longer needed (disk storage)
-        // await fs.unlink(req.file.path);
 
         // Grabbing the url and public ID from Cloudinary response
         newUser.avatar = response.secure_url;
