@@ -6,19 +6,15 @@ import { formatImage } from "../middleware/multerMiddleware.js";
 import User from "../models/UserModel.js";
 
 export const getAllUsers = async (req, res) => {
-    // try {
-    //     // const users = await UserModel.find({}).select("-password");
-    //     const users = await UserModel.find({});
-    //     res.status(StatusCodes.OK).json(users);
-    // } catch (error) {
-    //     res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({
-    //         msg: "Error fetching users",
-    //     });
-    // }
-
     const allUsers = await User.find({}).select("-password");
 
     res.status(StatusCodes.OK).json(allUsers);
+};
+
+export const getArtists = async (req, res) => {
+    const artists = await User.find({ role: "artist" }).select("-password");
+
+    res.status(StatusCodes.OK).json(artists);
 };
 
 export const getCurrentUser = async (req, res) => {
