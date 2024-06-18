@@ -17,6 +17,25 @@ export const getArtists = async (req, res) => {
     res.status(StatusCodes.OK).json(artists);
 };
 
+export const getNearbyArtists = async (req, res) => {
+    const { longitude, latitude, maxDistance } = req.query;
+
+    const nearbyArtists = await User.find({
+        role: "artist",
+        location: {
+            $near: {
+                $geometry: {
+                    type: "Point",
+                    coordinates: [parseFloat(longitude), parseFloat(latitude)],
+                },
+                $maxDistance: parseFloat(maxDistance),
+            },
+        },
+    }).select("-password -avatarPublicID");
+
+    res.status(StatusCodes.OK).json(nearbyArtists);
+};
+
 export const getCurrentUser = async (req, res) => {
     // Getting the user
     const user = await User.findOne({ _id: req.user.userId });
