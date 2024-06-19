@@ -37,6 +37,14 @@ export const getAllArtworks = async (req, res) => {
     res.status(StatusCodes.OK).json({ allArt });
 };
 
+export const getArtworksByCategory = async (req, res) => {
+    const { category } = req.params;
+
+    const artworks = await ArtModel.find({ category });
+
+    res.status(StatusCodes.OK).json(artworks);
+};
+
 export const getSingleArtwork = async (req, res) => {
     const { id } = req.params;
 
