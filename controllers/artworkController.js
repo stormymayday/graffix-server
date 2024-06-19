@@ -45,6 +45,14 @@ export const getArtworksByCategory = async (req, res) => {
     res.status(StatusCodes.OK).json(artworks);
 };
 
+export const getArtworksByArtist = async (req, res) => {
+    const { artistId } = req.params;
+
+    const artworks = await ArtModel.find({ createdBy: artistId });
+
+    res.status(StatusCodes.OK).json(artworks);
+};
+
 export const getSingleArtwork = async (req, res) => {
     const { id } = req.params;
 

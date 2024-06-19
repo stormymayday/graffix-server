@@ -10,6 +10,7 @@ import {
     updateArtwork,
     deleteArtwork,
     getArtworksByCategory,
+    getArtworksByArtist,
 } from "../controllers/artworkController.js";
 
 // Middleware
@@ -26,6 +27,8 @@ router
     .post(fileUpload.single("artwork"), validateArtworkInput, createArtwork);
 
 router.route("/category/:category").get(getArtworksByCategory);
+
+router.route("/artist/:artistId").get(getArtworksByArtist);
 
 router
     .route("/:id")
