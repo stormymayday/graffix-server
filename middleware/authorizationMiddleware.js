@@ -1,4 +1,5 @@
 import ArtworkModel from "../models/ArtworkModel.js";
+import TreasureModel from "../models/TreasureModel.js";
 import { UnauthorizedError, NotFoundError } from "../errors/customErrors.js";
 
 export const checkArtworkOwnership = async (req, res, next) => {
@@ -24,5 +25,25 @@ export const checkArtworkOwnership = async (req, res, next) => {
     }
 
     // If the user is the owner, proceed to the next middleware
+    next();
+};
+
+export const checkTreasureOwnership = async (req, res, next) => {
+    const { id } = req.params;
+
+    const { userId } = req.user;
+
+    const treasure = await TreasureModel.findById(id);
+
+    if (!treasure) {
+        throw new NotFoundError("Treasure not found");
+    }
+
+    if (treasure.createdBy.toString() !== userId) {
+        throw new UnauthorizedError(
+            "You are not authorized to modify this treasure"
+        );
+    }
+
     next();
 };

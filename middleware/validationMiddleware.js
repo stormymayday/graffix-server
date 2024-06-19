@@ -3,6 +3,7 @@ import { BadRequestError, NotFoundError } from "../errors/customErrors.js";
 import { ART_CATEGORIES } from "../utils/constants.js";
 import mongoose from "mongoose";
 import Artwork from "../models/ArtworkModel.js";
+import Treasure from "../models/TreasureModel.js";
 import User from "../models/UserModel.js";
 
 const withValidationErrors = (validateValues) => {
@@ -40,6 +41,12 @@ export const validateArtworkInput = withValidationErrors([
         .trim(),
 ]);
 
+export const validateTreasureInput = withValidationErrors([
+    body("category")
+        .isIn(Object.values(ART_CATEGORIES))
+        .withMessage("invalid treasure category"),
+]);
+
 export const validateIdParam = withValidationErrors([
     param("id").custom(async (value) => {
         // Either 'true' or 'false'
@@ -53,6 +60,23 @@ export const validateIdParam = withValidationErrors([
 
         if (!singleArtwork) {
             throw new NotFoundError(`no artwork with id ${value}`);
+        }
+    }),
+]);
+
+export const validateTreasureIdParam = withValidationErrors([
+    param("id").custom(async (value) => {
+        // Either 'true' or 'false'
+        const isValidMongoId = mongoose.Types.ObjectId.isValid(value);
+
+        if (!isValidMongoId) {
+            throw new BadRequestError("invalid mongo id");
+        }
+
+        const singleTreasure = await Treasure.findById(value);
+
+        if (!singleTreasure) {
+            throw new NotFoundError(`no treasure with id ${value}`);
         }
     }),
 ]);

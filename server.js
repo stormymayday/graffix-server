@@ -15,6 +15,7 @@ import cloudinary from "cloudinary";
 import artworkRouter from "./routes/artworkRouter.js";
 import authenticationRouter from "./routes/authenticationRouter.js";
 import userRouter from "./routes/userRouter.js";
+import treasureRouter from "./routes/treasureRouter.js";
 
 // public
 import { dirname } from "path";
@@ -49,6 +50,7 @@ app.use(express.json());
 app.use("/api/v1/art", authenticateUser, artworkRouter);
 app.use("/api/v1/users", authenticateUser, userRouter);
 app.use("/api/v1/auth", authenticationRouter);
+app.use("/api/v1/treasure", authenticateUser, treasureRouter);
 
 // Not Found
 app.use("*", (req, res) => {

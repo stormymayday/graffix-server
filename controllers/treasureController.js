@@ -10,15 +10,31 @@ export const createTreasure = async (req, res) => {
 
     const createdBy = req.user.userId;
 
-    let treasureUrl, treasurePublicID;
+    let treasureUrl, treasurePublicID, qrCodeUrl, qrCodePublicID;
 
-    if (req.file) {
-        const file = formatImage(req.file);
+    // Two files
+    if (req.files) {
+        if (req.files.treasure) {
+            const treasureFile = formatImage(req.files.treasure[0]);
 
-        const response = await cloudinary.v2.uploader.upload(file);
+            const treasureResponse = await cloudinary.v2.uploader.upload(
+                treasureFile
+            );
 
-        treasureUrl = response.secure_url;
-        treasurePublicID = response.public_id;
+            treasureUrl = treasureResponse.secure_url;
+            treasurePublicID = treasureResponse.public_id;
+        }
+
+        if (req.files.qrcode) {
+            const qrCodeFile = formatImage(req.files.qrcode[0]);
+
+            const qrCodeResponse = await cloudinary.v2.uploader.upload(
+                qrCodeFile
+            );
+
+            qrCodeUrl = qrCodeResponse.secure_url;
+            qrCodePublicID = qrCodeResponse.public_id;
+        }
     }
 
     const treasure = await TreasureModel.create({
@@ -32,6 +48,8 @@ export const createTreasure = async (req, res) => {
         },
         treasureUrl,
         treasurePublicID,
+        qrCodeUrl,
+        qrCodePublicID,
         createdBy,
     });
 
@@ -39,9 +57,9 @@ export const createTreasure = async (req, res) => {
 };
 
 export const getAllTreasures = async (req, res) => {
-    const allTreasures = await TreasureModel.find({});
+    const allTreasure = await TreasureModel.find({});
 
-    res.status(StatusCodes.OK).json({ allTreasures });
+    res.status(StatusCodes.OK).json(allTreasure);
 };
 
 export const getSingleTreasure = async (req, res) => {
@@ -49,7 +67,7 @@ export const getSingleTreasure = async (req, res) => {
 
     const singleTreasure = await TreasureModel.findById(id);
 
-    res.status(StatusCodes.OK).json({ singleTreasure });
+    res.status(StatusCodes.OK).json(singleTreasure);
 };
 
 export const updateTreasure = async (req, res) => {
@@ -57,20 +75,39 @@ export const updateTreasure = async (req, res) => {
 
     const updates = req.body;
 
-    if (req.file) {
+    if (req.files) {
         const treasure = await TreasureModel.findById(id);
-        if (treasure.treasurePublicID) {
-            await cloudinary.v2.uploader.destroy(treasure.treasurePublicID);
+
+        if (req.files.treasure) {
+            if (treasure.treasurePublicID) {
+                await cloudinary.v2.uploader.destroy(treasure.treasurePublicID);
+            }
+
+            const treasureFile = formatImage(req.files.treasure[0]);
+
+            const treasureResponse = await cloudinary.v2.uploader.upload(
+                treasureFile
+            );
+
+            updates.treasureUrl = treasureResponse.secure_url;
+            updates.treasurePublicID = treasureResponse.public_id;
         }
 
-        const file = formatImage(req.file);
+        if (req.files.qrcode) {
+            if (treasure.qrCodePublicID) {
+                await cloudinary.v2.uploader.destroy(treasure.qrCodePublicID);
+            }
 
-        const response = await cloudinary.v2.uploader.upload(file);
+            const qrCodeFile = formatImage(req.files.qrcode[0]);
 
-        updates.treasureUrl = response.secure_url;
-        updates.treasurePublicID = response.public_id;
+            const qrCodeResponse = await cloudinary.v2.uploader.upload(
+                qrCodeFile
+            );
 
-        // QR Code
+            updates.qrCodeUrl = qrCodeResponse.secure_url;
+
+            updates.qrCodePublicID = qrCodeResponse.public_id;
+        }
     }
 
     const updatedTreasure = await TreasureModel.findByIdAndUpdate(id, updates, {
@@ -87,11 +124,15 @@ export const deleteTreasure = async (req, res) => {
 
     const removedTreasure = await TreasureModel.findByIdAndDelete(id);
 
+    // Treasure
     if (removedTreasure.treasurePublicID) {
         await cloudinary.v2.uploader.destroy(removedTreasure.treasurePublicID);
     }
 
     // QR Code
+    if (removedTreasure.qrCodePublicID) {
+        await cloudinary.v2.uploader.destroy(removedTreasure.qrCodePublicID);
+    }
 
     res.status(StatusCodes.OK).json({
         msg: "Treasure deleted",
@@ -126,25 +167,33 @@ export const getTreasuresByDistance = async (req, res) => {
 };
 
 export const addTreasureToCollection = async (req, res) => {
-    const { treasureId } = req.body;
-
+    const { treasureId } = req.params;
     const userId = req.user.userId;
 
-    const user = await UserModel.findById(userId);
-
-    if (!user) {
-        return res
-            .status(StatusCodes.NOT_FOUND)
-            .json({ msg: "User not found" });
+    try {
+        const user = await UserModel.findById(userId);
+        if (!user) {
+            return res
+                .status(StatusCodes.NOT_FOUND)
+                .json({ msg: "User not found" });
+        }
+        const treasure = await TreasureModel.findById(treasureId);
+        if (!treasure) {
+            return res
+                .status(StatusCodes.NOT_FOUND)
+                .json({ msg: "Treasure not found" });
+        }
+        if (!user.treasureCollection.includes(treasureId)) {
+            user.treasureCollection.push(treasureId);
+            await user.save();
+        }
+        res.status(StatusCodes.OK).json({
+            msg: "Treasure added to collection",
+            treasureCollection: user.treasureCollection,
+        });
+    } catch (error) {
+        res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({
+            msg: "Error adding treasure to collection",
+        });
     }
-
-    if (!user.treasureCollection.includes(treasureId)) {
-        user.treasureCollection.push(treasureId);
-
-        await user.save();
-    }
-
-    res.status(StatusCodes.OK).json({
-        msg: "Treasure added to collection",
-    });
 };

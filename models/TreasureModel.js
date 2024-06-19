@@ -23,7 +23,7 @@ const TreasureSchema = new mongoose.Schema(
         treasureUrl: String,
         treasurePublicID: String,
         qrCodeUrl: String,
-        qrCodeUrlPublicID: String,
+        qrCodePublicID: String,
         createdBy: {
             type: mongoose.Types.ObjectId,
             ref: "User",
