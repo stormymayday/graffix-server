@@ -32,4 +32,7 @@ const TreasureSchema = new mongoose.Schema(
     { timestamps: true }
 );
 
+// Creating a geospatial index on the location field
+TreasureSchema.index({ location: "2dsphere" });
+
 export default mongoose.model("Treasure", TreasureSchema);
