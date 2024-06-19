@@ -4,15 +4,21 @@ import { ART_CATEGORIES } from "../utils/constants.js";
 
 const TreasureSchema = new mongoose.Schema(
     {
-        title: { type: String, required: true },
-        description: { type: String, required: true },
-        message: { type: String, required: true },
+        title: String,
+        description: String,
+        message: String,
         category: {
             type: String,
             enum: Object.values(ART_CATEGORIES),
         },
-        coordinates: {
-            type: [Number], // [longitude, latitude]
+        location: {
+            type: {
+                type: String,
+                enum: ["Point"],
+            },
+            coordinates: {
+                type: [Number],
+            },
         },
         treasureUrl: String,
         treasurePublicID: String,

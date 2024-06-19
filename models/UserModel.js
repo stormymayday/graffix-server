@@ -5,7 +5,6 @@ const UserSchema = new mongoose.Schema(
         username: String,
         email: String,
         password: String,
-        // name: String,
         bio: String,
         location: {
             type: {
@@ -23,6 +22,12 @@ const UserSchema = new mongoose.Schema(
             enum: ["artlover", "artist", "admin"],
             default: "artlover",
         },
+        treasureCollection: [
+            {
+                type: mongoose.Types.ObjectId,
+                ref: "Treasure",
+            },
+        ],
     },
     { timestamps: true }
 );
