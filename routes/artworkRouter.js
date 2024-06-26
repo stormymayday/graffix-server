@@ -40,6 +40,10 @@ router
         checkArtworkOwnership,
         updateArtwork
     )
-    .delete(validateIdParam, checkArtworkOwnership, deleteArtwork);
+    .delete(
+        validateIdParam,
+        // checkArtworkOwnership,
+        deleteArtwork
+    );
 
 export default router;

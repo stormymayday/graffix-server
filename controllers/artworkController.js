@@ -1,4 +1,5 @@
 import ArtModel from "../models/ArtworkModel.js";
+import UserModel from "../models/UserModel.js";
 import { StatusCodes } from "http-status-codes";
 import cloudinary from "cloudinary";
 import { formatImage } from "../middleware/multerMiddleware.js";
@@ -19,6 +20,9 @@ export const createArtwork = async (req, res) => {
         artworkPublicID = response.public_id;
     }
 
+    const user = await UserModel.findById(createdBy);
+    const artistName = user.username;
+
     const art = await ArtModel.create({
         title,
         description,
@@ -26,6 +30,7 @@ export const createArtwork = async (req, res) => {
         artworkUrl,
         artworkPublicID,
         createdBy,
+        artistName,
     });
 
     return res.status(StatusCodes.CREATED).json({ art });
@@ -93,7 +98,7 @@ export const updateArtwork = async (req, res) => {
 export const deleteArtwork = async (req, res) => {
     const { id } = req.params;
 
-    const removedArt = await ArtModel.findOneAndDelete(id);
+    const removedArt = await ArtModel.findByIdAndDelete(id);
 
     // Deleting file from Cloudinary
     if (removedArt.artworkPublicID) {

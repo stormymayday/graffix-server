@@ -20,6 +20,7 @@ const ArtworkSchema = new mongoose.Schema(
             type: Number,
             default: 0,
         },
+        artistName: String,
     },
     { timestamps: true }
 );
