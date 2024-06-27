@@ -47,6 +47,7 @@ export const getCurrentUser = async (req, res) => {
     res.status(StatusCodes.OK).json({ userWithoutPassword });
 };
 
+// Two files
 export const updateUser = async (req, res) => {
     const userId = req.user.userId;
     const newUser = { ...req.body };
