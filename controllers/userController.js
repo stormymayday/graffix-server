@@ -48,32 +48,49 @@ export const getCurrentUser = async (req, res) => {
 };
 
 export const updateUser = async (req, res) => {
-    // grabbing the user
+    const userId = req.user.userId;
     const newUser = { ...req.body };
-    // deleting the password
     delete newUser.password;
 
-    // Checking if user sending an image
-    if (req.file) {
-        const file = formatImage(req.file);
+    // Fetching the current user details
+    const user = await User.findById(userId);
 
-        console.log(`userController log ${file}`);
+    if (req.files) {
+        if (req.files.avatar) {
+            if (user.avatarPublicID) {
+                await cloudinary.v2.uploader.destroy(user.avatarPublicID);
+            }
 
-        // Passing (formatted) file directly to Cloudinary
-        const response = await cloudinary.v2.uploader.upload(file);
+            const avatarFile = formatImage(req.files.avatar[0]);
+            const avatarResponse = await cloudinary.v2.uploader.upload(
+                avatarFile
+            );
 
-        // Grabbing the url and public ID from Cloudinary response
-        newUser.avatar = response.secure_url;
-        newUser.avatarPublicID = response.public_id;
+            newUser.avatar = avatarResponse.secure_url;
+            newUser.avatarPublicID = avatarResponse.public_id;
+        }
+
+        if (req.files.featuredArt) {
+            if (user.featuredArtPublicID) {
+                await cloudinary.v2.uploader.destroy(user.featuredArtPublicID);
+            }
+
+            const featuredArtFile = formatImage(req.files.featuredArt[0]);
+            const featuredArtResponse = await cloudinary.v2.uploader.upload(
+                featuredArtFile
+            );
+
+            newUser.featuredArtUrl = featuredArtResponse.secure_url;
+            newUser.featuredArtPublicID = featuredArtResponse.public_id;
+        }
     }
 
-    const updatedUser = await User.findByIdAndUpdate(req.user.userId, newUser);
+    const updatedUser = await User.findByIdAndUpdate(userId, newUser, {
+        new: true,
+    });
 
-    // Checking if user sending an image && if there is an existing image on Cloudinary
-    if (req.file && updatedUser.avatarPublicID) {
-        // Deleting old image on Cloudinary
-        await cloudinary.v2.uploader.destroy(updatedUser.avatarPublicID);
-    }
-
-    res.status(StatusCodes.OK).json({ msg: "user updated" });
+    res.status(StatusCodes.OK).json({
+        msg: "user updated",
+        user: updatedUser.removePassword(),
+    });
 };

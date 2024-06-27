@@ -52,7 +52,11 @@ router
         checkTreasureOwnership,
         updateTreasure
     )
-    .delete(validateTreasureIdParam, checkTreasureOwnership, deleteTreasure);
+    .delete(
+        validateTreasureIdParam,
+        // checkTreasureOwnership,
+        deleteTreasure
+    );
 
 router.route("/add-to-collection/:treasureId").post(addTreasureToCollection);
 

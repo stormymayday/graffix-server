@@ -17,8 +17,12 @@ router.get("/artists", getArtists);
 router.get("/artists/nearby", getNearbyArtists);
 router.patch(
     "/update-user",
-    fileUpload.single("avatar"),
-    validateUpdateUserInput,
+    // fileUpload.single("avatar"),
+    fileUpload.fields([
+        { name: "avatar", maxCount: 1 },
+        { name: "featuredArt", maxCount: 1 },
+    ]),
+    // validateUpdateUserInput,
     updateUser
 );
 

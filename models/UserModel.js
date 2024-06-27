@@ -17,6 +17,8 @@ const UserSchema = new mongoose.Schema(
         },
         avatar: String,
         avatarPublicID: String,
+        featuredArtUrl: String,
+        featuredArtPublicID: String,
         role: {
             type: String,
             enum: ["artlover", "artist", "admin"],
