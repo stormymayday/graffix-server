@@ -1,5 +1,6 @@
 import mongoose from "mongoose";
 
+// Add social links and pronouns
 const UserSchema = new mongoose.Schema(
     {
         username: String,
