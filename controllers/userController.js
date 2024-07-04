@@ -145,3 +145,14 @@ export const unlikeArtwork = async (req, res) => {
         res.status(400).json({ msg: "Artwork not liked" });
     }
 };
+
+export const getUserLikedArtworks = async (req, res) => {
+    const { userId } = req.params;
+    const user = await User.findById(userId).populate("likedArtwork");
+
+    if (!user) {
+        return res.status(404).json({ msg: "User not found" });
+    }
+
+    res.status(200).json({ likedArtworks: user.likedArtwork });
+};
