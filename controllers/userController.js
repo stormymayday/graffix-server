@@ -156,3 +156,14 @@ export const getUserLikedArtworks = async (req, res) => {
 
     res.status(200).json({ likedArtworks: user.likedArtwork });
 };
+
+export const getUserById = async (req, res) => {
+    const { userId } = req.params;
+    const user = await User.findById(userId).select("-password");
+
+    if (!user) {
+        return res.status(404).json({ msg: "User not found" });
+    }
+
+    res.status(200).json({ user });
+};
