@@ -129,3 +129,19 @@ export const likeArtwork = async (req, res) => {
         res.status(400).json({ msg: "Artwork already liked" });
     }
 };
+
+export const unlikeArtwork = async (req, res) => {
+    const { artworkId } = req.params;
+    const userId = req.user.userId;
+
+    const user = await User.findById(userId);
+    if (user.likedArtwork.includes(artworkId)) {
+        user.likedArtwork = user.likedArtwork.filter(
+            (id) => id.toString() !== artworkId
+        );
+        await user.save();
+        res.status(200).json({ msg: "Artwork unliked" });
+    } else {
+        res.status(400).json({ msg: "Artwork not liked" });
+    }
+};

@@ -7,6 +7,7 @@ import {
     getNearbyArtists,
     getUserCollectedTreasures,
     likeArtwork,
+    unlikeArtwork,
 } from "../controllers/userController.js";
 import { validateUpdateUserInput } from "../middleware/validationMiddleware.js";
 import fileUpload from "../middleware/multerMiddleware.js";
@@ -19,6 +20,7 @@ router.get("/artists", getArtists);
 router.get("/artists/nearby", getNearbyArtists);
 router.get("/user/:userId/collected-treasures", getUserCollectedTreasures);
 router.patch("/like-artwork/:artworkId", likeArtwork);
+router.patch("/unlike-artwork/:artworkId", unlikeArtwork);
 router.patch(
     "/update-user",
     // fileUpload.single("avatar"),
