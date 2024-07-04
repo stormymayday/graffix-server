@@ -95,3 +95,22 @@ export const updateUser = async (req, res) => {
         user: updatedUser.removePassword(),
     });
 };
+
+export const getUserCollectedTreasures = async (req, res) => {
+    const { userId } = req.params;
+
+    try {
+        const user = await User.findById(userId).populate("treasureCollection");
+        if (!user) {
+            return res
+                .status(StatusCodes.NOT_FOUND)
+                .json({ message: "User not found" });
+        }
+        res.status(StatusCodes.OK).json(user.treasureCollection);
+    } catch (error) {
+        res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({
+            message: "Server error",
+            error,
+        });
+    }
+};

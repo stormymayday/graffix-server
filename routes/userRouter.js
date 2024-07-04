@@ -5,6 +5,7 @@ import {
     getAllUsers,
     getArtists,
     getNearbyArtists,
+    getUserCollectedTreasures,
 } from "../controllers/userController.js";
 import { validateUpdateUserInput } from "../middleware/validationMiddleware.js";
 import fileUpload from "../middleware/multerMiddleware.js";
@@ -15,6 +16,7 @@ router.get("/current-user", getCurrentUser);
 router.get("/all-users", getAllUsers);
 router.get("/artists", getArtists);
 router.get("/artists/nearby", getNearbyArtists);
+router.get("/user/:userId/collected-treasures", getUserCollectedTreasures);
 router.patch(
     "/update-user",
     // fileUpload.single("avatar"),
