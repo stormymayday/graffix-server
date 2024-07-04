@@ -4,6 +4,7 @@ import cloudinary from "cloudinary";
 import { formatImage } from "../middleware/multerMiddleware.js";
 
 import User from "../models/UserModel.js";
+import Artwork from "../models/ArtworkModel.js";
 
 export const getAllUsers = async (req, res) => {
     const allUsers = await User.find({}).select("-password");
@@ -112,5 +113,19 @@ export const getUserCollectedTreasures = async (req, res) => {
             message: "Server error",
             error,
         });
+    }
+};
+
+export const likeArtwork = async (req, res) => {
+    const { artworkId } = req.params;
+    const userId = req.user.userId;
+
+    const user = await User.findById(userId);
+    if (!user.likedArtwork.includes(artworkId)) {
+        user.likedArtwork.push(artworkId);
+        await user.save();
+        res.status(200).json({ msg: "Artwork liked" });
+    } else {
+        res.status(400).json({ msg: "Artwork already liked" });
     }
 };

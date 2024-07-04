@@ -31,6 +31,12 @@ const UserSchema = new mongoose.Schema(
                 ref: "Treasure",
             },
         ],
+        likedArtwork: [
+            {
+                type: mongoose.Types.ObjectId,
+                ref: "Artwork",
+            },
+        ],
     },
     { timestamps: true }
 );
