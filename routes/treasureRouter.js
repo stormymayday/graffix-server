@@ -9,6 +9,7 @@ import {
     getTreasuresByCategory,
     getTreasuresByDistance,
     addTreasureToCollection,
+    getTreasuresByArtist,
 } from "../controllers/treasureController.js";
 
 // Middleware
@@ -36,6 +37,8 @@ router
     );
 
 router.route("/category/:category").get(getTreasuresByCategory);
+
+router.route("/artist/:artistId").get(getTreasuresByArtist);
 
 router.route("/nearby").get(getTreasuresByDistance);
 

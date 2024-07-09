@@ -197,3 +197,11 @@ export const addTreasureToCollection = async (req, res) => {
         });
     }
 };
+
+export const getTreasuresByArtist = async (req, res) => {
+    const { artistId } = req.params;
+
+    const treasures = await TreasureModel.find({ createdBy: artistId });
+
+    res.status(StatusCodes.OK).json(treasures);
+};
