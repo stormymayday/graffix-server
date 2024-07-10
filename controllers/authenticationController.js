@@ -5,18 +5,52 @@ import { UnauthenticatedError } from "../errors/customErrors.js";
 import { createJWT } from "../utils/tokenUtils.js";
 
 export const register = async (req, res) => {
+    const { username, email, password, longitude, latitude } = req.body;
+
     // Hashing the password
-    const hashedPassword = await hashPassword(req.body.password);
+    const hashedPassword = await hashPassword(password);
 
-    // Overriding the value
-    req.body.password = hashedPassword;
-
-    // Creating user instance
-    const user = await User.create(req.body);
+    // Creating user instance with location
+    const user = await User.create({
+        username,
+        email,
+        password: hashedPassword,
+        location:
+            longitude && latitude
+                ? {
+                      type: "Point",
+                      coordinates: [
+                          parseFloat(longitude),
+                          parseFloat(latitude),
+                      ],
+                  }
+                : undefined,
+    });
 
     // Sending back the response
-    res.status(StatusCodes.CREATED).json({ msg: "user created" });
+    res.status(StatusCodes.CREATED).json({
+        msg: "user created",
+        user: {
+            username: user.username,
+            email: user.email,
+            location: user.location,
+        },
+    });
 };
+
+// export const register = async (req, res) => {
+//     // Hashing the password
+//     const hashedPassword = await hashPassword(req.body.password);
+
+//     // Overriding the value
+//     req.body.password = hashedPassword;
+
+//     // Creating user instance
+//     const user = await User.create(req.body);
+
+//     // Sending back the response
+//     res.status(StatusCodes.CREATED).json({ msg: "user created" });
+// };
 
 export const login = async (req, res) => {
     // Looking for the user with matching email
