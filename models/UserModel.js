@@ -7,6 +7,7 @@ const UserSchema = new mongoose.Schema(
         email: String,
         password: String,
         bio: String,
+        pushToken: String,
         location: {
             type: {
                 type: String,
