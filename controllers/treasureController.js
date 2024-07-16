@@ -183,10 +183,13 @@ export const addTreasureToCollection = async (req, res) => {
                 .status(StatusCodes.NOT_FOUND)
                 .json({ msg: "Treasure not found" });
         }
-        if (!user.treasureCollection.includes(treasureId)) {
-            user.treasureCollection.push(treasureId);
-            await user.save();
+        if (user.treasureCollection.includes(treasureId)) {
+            return res
+                .status(StatusCodes.BAD_REQUEST)
+                .json({ msg: "Treasure already in collection" });
         }
+        user.treasureCollection.push(treasureId);
+        await user.save();
         res.status(StatusCodes.OK).json({
             msg: "Treasure added to collection",
             treasureCollection: user.treasureCollection,
