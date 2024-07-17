@@ -75,6 +75,18 @@ export const updateTreasure = async (req, res) => {
 
     const updates = req.body;
 
+    if (updates.longitude && updates.latitude) {
+        updates.location = {
+            type: "Point",
+            coordinates: [
+                parseFloat(updates.longitude),
+                parseFloat(updates.latitude),
+            ],
+        };
+        delete updates.longitude;
+        delete updates.latitude;
+    }
+
     if (req.files) {
         const treasure = await TreasureModel.findById(id);
 
