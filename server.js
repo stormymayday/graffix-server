@@ -10,6 +10,7 @@ import morgan from "morgan";
 import mongoose from "mongoose";
 import cookieParser from "cookie-parser";
 import cloudinary from "cloudinary";
+import rateLimit from "express-rate-limit";
 
 // Router Imports
 import artworkRouter from "./routes/artworkRouter.js";
@@ -35,9 +36,20 @@ cloudinary.config({
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 
+// Rate limiter
+const limiter = rateLimit({
+    windowMs: 15 * 60 * 1000, // 15 minutes
+    max: 100, // Limit each IP to 100 requests per windowMs
+    standardHeaders: true,
+    legacyHeaders: false,
+});
+
 if (process.env.NODE_ENV === "development") {
     app.use(morgan("dev"));
 }
+
+// Apply rate limiter to all requests
+app.use(limiter);
 
 // File Uploads - deprecated
 app.use(express.static(path.resolve(__dirname, "./public")));
