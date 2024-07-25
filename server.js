@@ -11,6 +11,7 @@ import mongoose from "mongoose";
 import cookieParser from "cookie-parser";
 import cloudinary from "cloudinary";
 import rateLimit from "express-rate-limit";
+import helmet from "helmet";
 
 // Router Imports
 import artworkRouter from "./routes/artworkRouter.js";
@@ -47,6 +48,9 @@ const limiter = rateLimit({
 if (process.env.NODE_ENV === "development") {
     app.use(morgan("dev"));
 }
+
+// Apply Helmet to set various HTTP headers for security
+app.use(helmet());
 
 // Apply rate limiter to all requests
 app.use(limiter);
